@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>28 Seville Street, Pakenham | Modern Cottage Green</title>
+    <meta name="description"
+        content="Luxury real estate showcase for 28 Seville Street, Pakenham. Experience the perfect blend of modern living and organic cottage aesthetics.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <style>
+        :root {
+            --sage-green: #87A96B;
+            --forest-moss: #2C5E1A;
+            --warm-cream: #F5F5DC;
+            --soft-cream: #FDF5E6;
+            --text-dark: #1A2E11;
+
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--warm-cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Grain Overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+
+        /* Nav & Fixed CTA */
+        .fixed-cta {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: var(--forest-moss);
+            color: var(--soft-cream);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            z-index: 1000;
+            border: none;
+            box-shadow: 0 10px 30px rgba(44, 94, 26, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fixed-cta:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(44, 94, 26, 0.6);
+            background-color: #1a420b;
+            /* Darker moss */
+        }
+
+        /* Typography Morphing */
+        .blur-text {
+            filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            will-change: filter, opacity, transform;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-img {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            object-fit: cover;
+            z-index: -1;
+            /* Parallax applied via GSAP */
+            will-change: transform;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(135, 169, 107, 0.3), rgba(44, 94, 26, 0.6));
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: var(--soft-cream);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-family: var(--font-heading);
+            font-weight: 800;
+            line-height: 1.1;
+            margin: 0;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* About & Scroll-Triggered Growth */
+        .about-section {
+            padding: 10rem 2rem;
+            background-color: var(--sage-green);
+            position: relative;
+            overflow: hidden;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: var(--soft-cream);
+        }
+
+        .about-container h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            margin-bottom: 2.5rem;
+            color: var(--forest-moss);
+        }
+
+        .about-container p {
+            font-size: 1.6rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-dark);
+            font-weight: 400;
+        }
+
+        /* Leaf SVG Masking Growth */
+        .leaf-path-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.15;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .leaf-svg {
+            width: 120%;
+            height: 120%;
+            max-height: 1000px;
+        }
+
+        .path-growth {
+            stroke-dasharray: 1500;
+            stroke-dashoffset: 1500;
+            fill: transparent;
+        }
+
+        /* Floating Gallery */
+        .gallery-section {
+            padding: 12rem 2rem;
+            background-color: var(--warm-cream);
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 8rem;
+        }
+
+        .gallery-header h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 6vw, 5rem);
+            color: var(--forest-moss);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .float-item {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(44, 94, 26, 0.15);
+            will-change: transform;
+        }
+
+        .fi-1 {
+            grid-column: 1 / 7;
+            height: 600px;
+            margin-top: 5rem;
+        }
+
+        .fi-2 {
+            grid-column: 7 / 13;
+            height: 800px;
+        }
+
+        .fi-3 {
+            grid-column: 2 / 6;
+            height: 500px;
+            margin-top: -10rem;
+        }
+
+        .fi-4 {
+            grid-column: 6 / 11;
+            height: 400px;
+            margin-top: 4rem;
+        }
+
+        /* Features Grid - Glassmorphism */
+        .features-section {
+            padding: 10rem 2rem;
+            background: linear-gradient(135deg, var(--soft-cream) 0%, var(--warm-cream) 100%);
+            position: relative;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            padding-top: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(135, 169, 107, 0.3);
+            border-radius: 30px;
+            padding: 3.5rem 2.5rem;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 30px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.5;
+            transition: opacity 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            border-color: rgba(135, 169, 107, 0.8);
+            box-shadow: 0 30px 60px rgba(135, 169, 107, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.8;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            display: inline-block;
+            background: var(--soft-cream);
+            padding: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(44, 94, 26, 0.1);
+        }
+
+        .feature-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--forest-moss);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card p {
+            color: var(--text-dark);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+            font-size: 1.05rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--forest-moss);
+            color: var(--soft-cream);
+            padding: 6rem 2rem;
+            text-align: center;
+            font-family: var(--font-heading);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer p {
+            position: relative;
+            z-index: 1;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .gallery-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 4rem;
+            }
+
+            .float-item {
+                height: 50vw;
+                min-height: 300px;
+                margin-top: 0 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .fixed-cta {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                padding: 0.8rem 1.8rem;
+                font-size: 1rem;
+            }
+
+            .about-container p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="grain-overlay"></div>
+
+    <button id="rent-button" class="fixed-cta">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Rent Now
+    </button>
+
+    <header class="hero">
+        <img src="assets/image6.jpg" alt="28 Seville Street Front View" class="hero-img" id="hero-img">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <p class="blur-text head-sub">Welcome to</p>
+            <h1 class="blur-text head-title">28 Seville Street</h1>
+            <p class="blur-text head-loc">Pakenham, Victoria</p>
+        </div>
+    </header>
+
+    <section class="about-section">
+        <div class="leaf-path-container">
+            <svg class="leaf-svg" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid slice">
+                <!-- Abstract organic leaf/vine pattern -->
+                <path class="path-growth" stroke="var(--forest-moss)" stroke-width="12" stroke-linecap="round"
+                    fill="none"
+                    d="M100,700 C200,600 150,400 300,300 C450,200 600,350 700,200 C800,50 900,150 950,100 M300,300 C350,450 250,550 400,600 M700,200 C750,300 650,400 800,450" />
+            </svg>
+        </div>
+        <div class="about-container">
+            <h2 class="blur-text">Modern Cottage Green</h2>
+            <p class="blur-text">An airy, organic, and grounded residential experience. Step into a world where
+                high-tech comfort seamlessly blends with natural tranquility. Embrace the "Comfortable Family Living"
+                atmosphere, meticulously crafted with sage greens and warm creams.</p>
+        </div>
+    </section>
+
+    <section class="gallery-section">
+        <div class="gallery-header">
+            <h2 class="blur-text">Floating Gallery</h2>
+        </div>
+        <div class="gallery-grid">
+            <img src="assets/image2.jpg" alt="Interior Details" class="float-item fi-1" data-speed="0.6">
+            <img src="assets/image3.jpg" alt="Kitchen Space" class="float-item fi-2" data-speed="1.1">
+            <img src="assets/image4.jpg" alt="Living Area" class="float-item fi-3" data-speed="0.8">
+            <img src="assets/image6.jpg" alt="Bedroom Setup" class="float-item fi-4" data-speed="1.3">
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="gallery-header" style="margin-bottom: 4rem;">
+            <h2 class="blur-text" style="color: var(--forest-moss);">Property Features</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌿</div>
+                <h3>Lush Gardens</h3>
+                <p>Immerse yourself in expertly landscaped cottage gardens that perfectly frame the residence, offering
+                    a serene escape.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✨</div>
+                <h3>Natural Light</h3>
+                <p>Expansive windows designed to bathe every room in organic, warm sunlight throughout the day.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🍳</div>
+                <h3>Gourmet Kitchen</h3>
+                <p>State-of-the-art culinary space paired with classic cottage charm and signature sage accent
+                    cabinetry.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛁</div>
+                <h3>Spa Bathrooms</h3>
+                <p>Luxurious, deep soaking tubs surrounded by natural textures for ultimate relaxation at home.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔥</div>
+                <h3>Cozy Living</h3>
+                <p>A welcoming central hearth to gather around during chilly Pakenham evenings with family.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Secure Parking</h3>
+                <p>Ample and secure garage space designed to blend seamlessly with the home's architectural facade.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>28 Seville Street, Pakenham | Crafted with Antigravity Protocol</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // --- 1. Text Morphing: 'Blur-to-Focus' ---
+            const blurTexts = document.querySelectorAll('.blur-text');
+
+            blurTexts.forEach(text => {
+                gsap.to(text, {
+                    scrollTrigger: {
+                        trigger: text,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    },
+                    filter: "blur(0px)",
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.2,
+                    ease: "power3.out",
+                    stagger: 0.2
+                });
+            });
+
+            // --- 2. Hero Scroll Parallax ---
+            // Moving assets at a ratio of 0.5 relative to scroll speed
+            gsap.to("#hero-img", {
+                yPercent: 30, // Adjusting visual parallax to feel like 0.5 native ratio in view
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // --- 3. Scroll-Triggered Growth: SVG Masking ---
+            const leafPath = document.querySelector('.path-growth');
+            if (leafPath) {
+                const pathLength = leafPath.getTotalLength();
+                leafPath.style.strokeDasharray = pathLength;
+                leafPath.style.strokeDashoffset = pathLength;
+
+                gsap.to(leafPath, {
+                    scrollTrigger: {
+                        trigger: ".about-section",
+                        start: "top 70%",
+                        end: "bottom 40%",
+                        scrub: 1.5,
+                    },
+                    strokeDashoffset: 0,
+                    ease: "power1.inOut"
+                });
+            }
+
+            // --- 4. Floating Gallery: Staggered Float ---
+            const floatItems = document.querySelectorAll('.float-item');
+
+            floatItems.forEach(item => {
+                const speed = parseFloat(item.getAttribute('data-speed'));
+                gsap.to(item, {
+                    yPercent: -20 * speed,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".gallery-section",
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1
+                    }
+                });
+            });
+
+            // --- 5. Messenger Integration Logic ---
+            // Using a generic page ID as requested, or placeholder
+            const FB_PAGE_URL = "https://m.me/YOUR_PAGE_ID";
+
+            function redirectToMessenger() {
+                // Add a 'fade-out' animation before leaving
+                document.body.style.opacity = '0';
+
+                setTimeout(() => {
+                    window.open(FB_PAGE_URL, '_blank');
+
+                    // Reset opacity for when the user navigates back
+                    setTimeout(() => {
+                        document.body.style.opacity = '1';
+                    }, 500);
+                }, 500);
+            }
+
+            // Attach to 'Rent Now' button
+            const rentBtn = document.getElementById('rent-button');
+            if (rentBtn) {
+                rentBtn.addEventListener('click', redirectToMessenger);
+            }
+        });
+    </script>
+</body>
+
+</html>
